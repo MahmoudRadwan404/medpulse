@@ -44,7 +44,7 @@ class ArticleController extends Controller
     public function index()
     {
         try {
-            $articles = Article::all();
+            $articles = Article::with(['images'])->paginate(6);
 
             return response()->json([
                 'data' => $articles
