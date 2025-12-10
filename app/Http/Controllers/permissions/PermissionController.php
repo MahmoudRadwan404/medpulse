@@ -41,9 +41,18 @@ class PermissionController extends Controller
     }
     public function getPermissions()
     {
-        $permissions = Permission::all(['id', 'name', 'description']);
+        try {
+            $permissions = Permission::all(['id', 'name', 'description']);
 
-        return response($permissions);
+            return response($permissions);
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'message' => 'error occured',
+                    "error" => $e->getMessage()
+                ]
+            );
+        }
     }
     public function getPermission($id)
     {
