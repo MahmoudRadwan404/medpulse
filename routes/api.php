@@ -204,7 +204,7 @@ Route::get('/events', [EventController::class, 'index'])->name('events.list');//
 Route::get('/event/{id}', [EventController::class, 'show'])->name('events.show');//gl
 Route::delete('/event/{id}', [EventController::class, 'destroy'])->name('events.delete');
 Route::post('/event/{id}', [EventController::class, 'update'])->name('events.update');
-Route::get('/event-filter',[EventController::class,'events_filter']);
+Route::get('/event-filter',[EventController::class,'events_filter'])->name('filter_events');
 // Adding and removing authors to events
 Route::post('/attach-author-to-event', [EventController::class, 'attach_author_to_event'])->name('events.attach-author');
 Route::post('/detach-author-from-event', [EventController::class, 'detach_author_from_event'])->name('events.detach-author');
