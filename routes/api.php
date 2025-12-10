@@ -204,7 +204,7 @@ Route::get('/events', [EventController::class, 'index'])->name('events.list');//
 Route::get('/event/{id}', [EventController::class, 'show'])->name('events.show');//gl
 Route::delete('/event/{id}', [EventController::class, 'destroy'])->name('events.delete');
 Route::post('/event/{id}', [EventController::class, 'update'])->name('events.update');
-
+Route::get('/event-filter',[EventController::class,'events_filter']);
 // Adding and removing authors to events
 Route::post('/attach-author-to-event', [EventController::class, 'attach_author_to_event'])->name('events.attach-author');
 Route::post('/detach-author-from-event', [EventController::class, 'detach_author_from_event'])->name('events.detach-author');
@@ -264,6 +264,8 @@ Route::middleware(['auth:api'])->group(function () {
     
 });
 Route::post('/create-article', [ArticleController::class, 'create'])->name('articles.create');
+Route::get('/get-front-data/{id}',[FrontSettingsController::class,'get_front_data'])->name('get_front_data');
+Route::post('/create-front-mode',[FrontSettingsController::class,'create_front_settings'])->name('create_front_mode');
+//filter by title
 
-Route::get('/get-front-data/{id}',[FrontSettingsController::class,'get_front_data']);
-Route::post('/create-front-mode',[FrontSettingsController::class,'create_front_settings']);
+//filter by speciality year/city

@@ -21,7 +21,7 @@ class EventController extends Controller
     public function show($id)
     {
         try {
-            $event = Event::with(['analysis', 'images', 'videos','authors'])->find($id);
+            $event = Event::with(['analysis', 'images', 'videos', 'authors'])->find($id);
             return response()->json(['data' => $event]);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 404);
@@ -186,4 +186,96 @@ class EventController extends Controller
             ], 422);
         }
     }
+    public function events_filter(Request $request)
+    {
+        try {
+            // Validate input
+            $validated = $request->validate([
+                'title_ar' => 'nullable|string|max:255',
+                'title_en' => 'nullable|string|max:255',
+                'location' => 'nullable|string|max:255',
+                'date_of_happening' => 'nullable|date',
+                'total' => 'nullable|numeric',
+            ]);
+
+            // Check if at least one search parameter is provided
+            if (!$request->hasAny(['title_ar', 'title_en', 'location', 'date_of_happening', 'total'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'At least one search parameter is required',
+                    'errors' => [
+                        'search' => ['Please provide at least one filter: title_ar, title_en, location, date_of_happening, or total']
+                    ]
+                ], 422);
+            }
+
+            // Build query with when() clauses
+            $query = Event::with('analysis');
+
+            // Filter by Arabic title
+            if ($request->filled('title_ar')) {
+                $query->where('title_ar', 'LIKE', '%' . $validated['title_ar'] . '%');
+            }
+
+            // Filter by English title
+            if ($request->filled('title_en')) {
+                $query->where('title_en', 'LIKE', '%' . $validated['title_en'] . '%');
+            }
+
+            // Filter by location
+            if ($request->filled('location')) {
+                $query->where('location', 'LIKE', '%' . $validated['location'] . '%');
+            }
+
+            // Filter by date of happening
+            if ($request->filled('date_of_happening')) {
+                $query->whereDate('date_of_happening', $validated['date_of_happening']);
+            }
+
+            // Filter by analysis total rating
+            if ($request->filled('total')) {
+                $query->whereHas('analysis', function ($q) use ($validated) {
+                    $q->where('total', '>=', $validated['total']);
+                });
+            }
+
+            // Execute query
+            $events = $query->get();
+
+            // Check if results found
+            if ($events->isEmpty()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'No events found matching your criteria',
+                    'data' => [],
+                    'count' => 0
+                ], 200);
+            }
+
+            // Return successful response
+            return response()->json([
+                'success' => true,
+                'message' => 'Events retrieved successfully',
+                'data' => $events,
+                'count' => $events->count()
+            ], 200);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation errors
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+
+        } catch (Exception $e) {
+            // Handle other errors
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while filtering events',
+                'errors' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 }
