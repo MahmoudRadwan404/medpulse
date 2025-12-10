@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Http\Request;
 use App\Models\Permission;
+//use Spatie\Permission\Models\Permission; // ✅ Fixed import
 class PermissionController extends Controller
 {
 
@@ -42,16 +43,13 @@ class PermissionController extends Controller
     public function getPermissions()
     {
         try {
-            $permissions = Permission::all(['id', 'name', 'description']);
-
-            return response($permissions);
+            $permissions = Permission::get(['id', 'name', 'description']);
+            return response()->json($permissions); // ✅ Use json() for consistency
         } catch (Exception $e) {
-            return response()->json(
-                [
-                    'message' => 'error occured',
-                    "error" => $e->getMessage()
-                ]
-            );
+            return response()->json([
+                'message' => 'Error occurred', 
+                'error' => $e->getMessage()
+            ], 500); 
         }
     }
     public function getPermission($id)
