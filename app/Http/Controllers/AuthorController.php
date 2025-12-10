@@ -39,7 +39,7 @@ class AuthorController extends Controller
     public function index()
     {
         try {
-            $authors = Author::all();
+            $authors = Author::with('images');
 
             return response()->json([
                 'data' => $authors
@@ -54,7 +54,7 @@ class AuthorController extends Controller
     public function show($id)
     {
         try {
-            $author = Author::findOrFail($id);
+            $author = Author::with('images')->findOrFail($id);
 
             return response()->json([
                 'data' => $author
