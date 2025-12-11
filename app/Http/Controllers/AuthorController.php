@@ -39,7 +39,7 @@ class AuthorController extends Controller
     public function index()
     {
         try {
-            $authors = Author::with('images');
+            $authors = Author::with('images')->get();
 
             return response()->json([
                 'data' => $authors
