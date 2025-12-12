@@ -42,40 +42,46 @@ class EventController extends Controller
                 'organizer_ar' => 'required|string|max:255',
                 'description_en' => 'required|string',
                 'description_ar' => 'required|string',
-                'subjects_description_en' => 'nullable|string',
-                'subjects_description_ar' => 'nullable|string',
-                'subjects' => 'nullable|array',
+                // Accept arrays directly (Laravel will handle JSON conversion)
+                'subjects_description_en' => 'nullable|array',
+                'subjects_description_en.*' => 'nullable|string',
+                'subjects_description_ar' => 'nullable|array',
+                'subjects_description_ar.*' => 'nullable|string',
+                'subjects_en' => 'nullable|array',
+                'subjects_en.*' => 'nullable|string|max:255',
+                'subjects_ar' => 'nullable|array',
+                'subjects_ar.*' => 'nullable|string|max:255',
                 'authors_description_en' => 'nullable|string',
                 'authors_description_ar' => 'nullable|string',
                 'comments_for_medpulse_en' => 'nullable|string',
                 'comments_for_medpulse_ar' => 'nullable|string'
             ]);
 
-            $event = Event::create([
-                'title_en' => $request->input("title_en"),
-                'title_ar' => $request->input("title_ar"),
-                'location' => $request->input("location"),
-                'date_of_happening' => $request->input("date_of_happening"),
-                'stars' => $request->input("stars") ?? null,
-                'rate' => $request->input("rate") ?? null,
-                'organizer_en' => $request->input("organizer_en"),
-                'organizer_ar' => $request->input("organizer_ar"),
-                'description_en' => $request->input("description_en"),
-                'description_ar' => $request->input("description_ar"),
-                'subjects_description_en' => $request->input("subjects_description_en") ?? null,
-                'subjects_description_ar' => $request->input("subjects_description_ar") ?? null,
-                'subjects' => $request->input("subjects") ?? null,
-                'authors_description_en' => $request->input("authors_description_en") ?? null,
-                'authors_description_ar' => $request->input("authors_description_ar") ?? null,
-                'comments_for_medpulse_en' => $request->input("comments_for_medpulse_en") ?? null,
-                'comments_for_medpulse_ar' => $request->input("comments_for_medpulse_ar") ?? null,
-            ]);
+            $event = Event::create(// For creating/updating events
+                [
+                    'title_en' => $request->input("title_en"),
+                    'title_ar' => $request->input("title_ar"),
+                    'location' => $request->input("location"),
+                    'date_of_happening' => $request->input("date_of_happening"),
+                    'stars' => $request->input("stars") ?? 0, // Default to 0 instead of null
+                    'rate' => $request->input("rate") ?? 0, // Default to 0 instead of null
+                    'organizer_en' => $request->input("organizer_en"),
+                    'organizer_ar' => $request->input("organizer_ar"),
+                    'description_en' => $request->input("description_en"),
+                    'description_ar' => $request->input("description_ar"),
+                    // JSON array fields - ensure they're arrays
+                    'subjects_description_en' => $request->input("subjects_description_en") ?? [],
+                    'subjects_description_ar' => $request->input("subjects_description_ar") ?? [],
+                    'subjects_en' => $request->input("subjects_en") ?? [], // NEW FIELD
+                    'subjects_ar' => $request->input("subjects_ar") ?? [], // NEW FIELD
+                    'authors_description_en' => $request->input("authors_description_en") ?? null,
+                    'authors_description_ar' => $request->input("authors_description_ar") ?? null,
+                    'comments_for_medpulse_en' => $request->input("comments_for_medpulse_en") ?? null,
+                    'comments_for_medpulse_ar' => $request->input("comments_for_medpulse_ar") ?? null,
+                ],
 
-            return response()->json([
-                'message' => 'Event created successfully',
-                'data' => $event
-            ], 201);
-
+            );
+            return response()->json(['message' => "Event created successfully", 'data' => $event]);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 422);
         }
@@ -85,45 +91,51 @@ class EventController extends Controller
     {
         try {
             $request->validate([
-                'title_en' => 'sometimes|required|string|max:255',
-                'title_ar' => 'sometimes|required|string|max:255',
-                'location' => 'sometimes|required|string|max:255',
-                'date_of_happening' => 'sometimes|required|date',
-                'stars' => 'nullable|integer|min:0|max:5',
-                'rate' => 'nullable|numeric|min:0|max:10',
-                'organizer_en' => 'sometimes|required|string|max:255',
-                'organizer_ar' => 'sometimes|required|string|max:255',
-                'description_en' => 'sometimes|required|string',
-                'description_ar' => 'sometimes|required|string',
-                'subjects_description_en' => 'nullable|string',
-                'subjects_description_ar' => 'nullable|string',
-                'subjects' => 'nullable|array',
-                'authors_description_en' => 'nullable|string',
-                'authors_description_ar' => 'nullable|string',
-                'comments_for_medpulse_en' => 'nullable|string',
-                'comments_for_medpulse_ar' => 'nullable|string'
+                'title_en' => 'sometimes|nullable|string|max:255',
+                'title_ar' => 'sometimes|nullable|string|max:255',
+                'location' => 'sometimes|nullable|string|max:255',
+                'date_of_happening' => 'sometimes|nullable|date',
+                'stars' => 'sometimes|nullable|integer|min:0|max:5',
+                'rate' => 'sometimes|nullable|numeric|min:0|max:10',
+                'organizer_en' => 'sometimes|nullable|string|max:255',
+                'organizer_ar' => 'sometimes|nullable|string|max:255',
+                'description_en' => 'sometimes|nullable|string',
+                'description_ar' => 'sometimes|nullable|string',
+                'subjects_description_en' => 'sometimes|nullable|array',
+                'subjects_description_en.*' => 'nullable|string',
+                'subjects_description_ar' => 'sometimes|nullable|array',
+                'subjects_description_ar.*' => 'nullable|string',
+                'subjects_en' => 'sometimes|nullable|array',
+                'subjects_en.*' => 'nullable|string|max:255',
+                'subjects_ar' => 'sometimes|nullable|array',
+                'subjects_ar.*' => 'nullable|string|max:255',
+                'authors_description_en' => 'sometimes|nullable|string',
+                'authors_description_ar' => 'sometimes|nullable|string',
+                'comments_for_medpulse_en' => 'sometimes|nullable|string',
+                'comments_for_medpulse_ar' => 'sometimes|nullable|string'
             ]);
 
             $event = Event::findOrFail($id);
 
             $event->update([
-                'title_en' => $request->input('title_en', $event->title_en),
-                'title_ar' => $request->input('title_ar', $event->title_ar),
-                'location' => $request->input('location', $event->location),
-                'date_of_happening' => $request->input('date_of_happening', $event->date_of_happening),
-                'stars' => $request->input('stars') ?? $event->stars,
-                'rate' => $request->input('rate') ?? $event->rate,
-                'organizer_en' => $request->input('organizer_en', $event->organizer_en),
-                'organizer_ar' => $request->input('organizer_ar', $event->organizer_ar),
-                'description_en' => $request->input('description_en', $event->description_en),
-                'description_ar' => $request->input('description_ar', $event->description_ar),
-                'subjects_description_en' => $request->input('subjects_description_en') ?? $event->subjects_description_en,
-                'subjects_description_ar' => $request->input('subjects_description_ar') ?? $event->subjects_description_ar,
-                'subjects' => $request->input('subjects') ?? $event->subjects,
-                'authors_description_en' => $request->input('authors_description_en') ?? $event->authors_description_en,
-                'authors_description_ar' => $request->input('authors_description_ar') ?? $event->authors_description_ar,
-                'comments_for_medpulse_en' => $request->input('comments_for_medpulse_en') ?? $event->comments_for_medpulse_en,
-                'comments_for_medpulse_ar' => $request->input('comments_for_medpulse_ar') ?? $event->comments_for_medpulse_ar,
+                'title_en' => $request->filled('title_en') ? $request->input('title_en') : $event->title_en,
+                'title_ar' => $request->filled('title_ar') ? $request->input('title_ar') : $event->title_ar,
+                'location' => $request->filled('location') ? $request->input('location') : $event->location,
+                'date_of_happening' => $request->filled('date_of_happening') ? $request->input('date_of_happening') : $event->date_of_happening,
+                'stars' => $request->filled('stars') ? $request->input('stars') : $event->stars,
+                'rate' => $request->filled('rate') ? $request->input('rate') : $event->rate,
+                'organizer_en' => $request->filled('organizer_en') ? $request->input('organizer_en') : $event->organizer_en,
+                'organizer_ar' => $request->filled('organizer_ar') ? $request->input('organizer_ar') : $event->organizer_ar,
+                'description_en' => $request->filled('description_en') ? $request->input('description_en') : $event->description_en,
+                'description_ar' => $request->filled('description_ar') ? $request->input('description_ar') : $event->description_ar,
+                'subjects_description_en' => $request->filled('subjects_description_en') ? $request->input('subjects_description_en') : $event->subjects_description_en,
+                'subjects_description_ar' => $request->filled('subjects_description_ar') ? $request->input('subjects_description_ar') : $event->subjects_description_ar,
+                'subjects_en' => $request->filled('subjects_en') ? $request->input('subjects_en') : $event->subjects_en,
+                'subjects_ar' => $request->filled('subjects_ar') ? $request->input('subjects_ar') : $event->subjects_ar,
+                'authors_description_en' => $request->filled('authors_description_en') ? $request->input('authors_description_en') : $event->authors_description_en,
+                'authors_description_ar' => $request->filled('authors_description_ar') ? $request->input('authors_description_ar') : $event->authors_description_ar,
+                'comments_for_medpulse_en' => $request->filled('comments_for_medpulse_en') ? $request->input('comments_for_medpulse_en') : $event->comments_for_medpulse_en,
+                'comments_for_medpulse_ar' => $request->filled('comments_for_medpulse_ar') ? $request->input('comments_for_medpulse_ar') : $event->comments_for_medpulse_ar,
             ]);
 
             return response()->json([

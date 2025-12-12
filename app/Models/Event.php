@@ -20,18 +20,19 @@ class Event extends Model
         'description_ar',
         'subjects_description_en',
         'subjects_description_ar',
-        'subjects',
         'authors_description_en',
+        'subjects_en',
+        'subjects_ar',
         'authors_description_ar',
         'comments_for_medpulse_en',
         'comments_for_medpulse_ar',
     ];
 
     protected $casts = [
-        'date_of_happening' => 'date',
-        'stars' => 'integer',
-        'rate' => 'float',
-        'subjects' => 'array',
+        'subjects_description_en' => 'array',
+        'subjects_description_ar' => 'array',
+        'subjects_en' => 'array',
+        'subjects_ar' => 'array',
     ];
 
     /**

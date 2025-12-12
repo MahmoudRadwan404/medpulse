@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -23,9 +22,10 @@ return new class extends Migration
             $table->string('organizer_ar');
             $table->text('description_en');
             $table->text('description_ar');
-            $table->text('subjects_description_en');
-            $table->text('subjects_description_ar');
-            $table->json('subjects')->nullable();
+            $table->json('subjects_description_en')->nullable();
+            $table->json('subjects_description_ar')->nullable();
+            $table->json('subjects_en')->nullable();
+            $table->json('subjects_ar')->nullable();
             $table->text('authors_description_en');
             $table->text('authors_description_ar');
             $table->text('comments_for_medpulse_en');
