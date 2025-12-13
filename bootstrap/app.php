@@ -6,19 +6,21 @@ use Illuminate\Foundation\Configuration\Middleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-//        web: __DIR__.'/../routes/web.php',
-        api:__DIR__.'/../routes/api.php',
-        apiPrefix:'api',
-        commands: __DIR__.'/../routes/console.php',
+        api: __DIR__ . '/../routes/api.php',
+        apiPrefix: 'api',
+        commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-
-        //
+        // CORS middleware
         $middleware->api(prepend: [
-            \Illuminate\Http\Middleware\HandleCors::class,//cors
+            \Illuminate\Http\Middleware\HandleCors::class,
         ]);
+        
+        // Register middleware aliases
         $middleware->alias([
+            'jwt.auth' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
+            'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class, // ← ADD THIS
             'role.check' => \App\Http\Middleware\RoleCheckMiddleware::class,
         ]);
     })
