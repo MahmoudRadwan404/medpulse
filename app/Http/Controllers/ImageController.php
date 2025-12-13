@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Image;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
@@ -13,16 +14,7 @@ class ImageController extends Controller
     public function create(Request $request)
     {
 
-        //     $path = $request->file('image')->store('newPhoto', 'public');
-        //     $type = $request->file('image')->getMimeType();
-        //     $fullname='/storage/'.$path;
-        //     //   Image::create([
-        //     //         'type' => $request->input('type'),//profile,thumbnail,content
-        //     //         'articel_id' => $request->input('article_id'),
-        //     //         'author_id' => $request->input('author_id'),
-        //     //         'event_id' => $request->input('event_id'),
-        //     //     ]);
-        // return response([$fullname,$type]);
+
         $validator = Validator::make($request->all(), [
             'images' => 'required|array',
             'images.*.file' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
@@ -78,16 +70,33 @@ class ImageController extends Controller
             'data' => $uploadedImages
         ], 201);
     }
+    public function imagebyid($id)
+    {
+        try {
+            $image = Image::findOrFail($id);
+            return response()->json([
+                'success' => true,
+                'message' => 'Image retreived successfully',
+                "data" => $image
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                "success" => false,
+                "message" => $e->getMessage()
+            ]);
+        }
+
+    }
     public function destroy($id)
     {
         $image = Image::findOrFail($id);
-        
+
         // Delete file from storage
         $filePath = str_replace('/storage/', '', $image->name);
         if (Storage::disk('public')->exists($filePath)) {
             Storage::disk('public')->delete($filePath);
         }
-        
+
         // Delete database record
         $image->delete();
 

@@ -85,6 +85,7 @@ Route::get('/events-articles', [SettingsController::class, 'events_articles'])->
 
 Route::middleware(['jwt.verify'])->group(function () {
     Route::middleware(['role.check'])->group(function () {
+        Route::post('/create-permission', [PermissionController::class, 'create'])->name('permissions.create');
         Route::get('/users', [UserController::class, 'getUsers'])->name('users.list');
         Route::post('/permission/{id}', [PermissionController::class, 'updatePermission'])->name('permissions.update');
         Route::delete('/permission/{id}', [PermissionController::class, 'deletePermission'])->name('permissions.delete');
@@ -109,7 +110,7 @@ Route::middleware(['jwt.verify'])->group(function () {
         Route::post('/create-author', [AuthorController::class, 'create'])->name('authors.create');
         Route::post('/author/{id}', [AuthorController::class, 'update'])->name('authors.update');
         Route::delete('/author/{id}', [AuthorController::class, 'destroy'])->name('authors.delete');
-        
+
         // Adding and removing authors
         Route::post('/attach-author-to-article', [AuthorController::class, 'attach_author_to_article'])->name('articles.attach-author');
         Route::post('/detach-author-from-article', [AuthorController::class, 'detach_author_from_article'])->name('articles.detach-author');
@@ -129,7 +130,7 @@ Route::middleware(['jwt.verify'])->group(function () {
         Route::post('/expert', [ExpertController::class, 'create'])->name('experts.create');
         Route::post('/expert/{id}', [ExpertController::class, 'update'])->name('experts.update');
         Route::delete('/expert/{id}', [ExpertController::class, 'destroy'])->name('experts.delete');
-        
+
         Route::post('/contact', [ContactController::class, 'create'])->name('contacts.create');
         Route::get('/contact/{id}', [ContactController::class, 'show'])->name('contacts.show');//gl
         Route::post('/contact-update/{id}', [ContactController::class, 'update'])->name('contacts.update');
@@ -142,6 +143,7 @@ Route::middleware(['jwt.verify'])->group(function () {
         Route::get('/get-front-data', [FrontSettingsController::class, 'get_front_data'])->name('get_front_data');
         Route::post('/create-front-mode', [FrontSettingsController::class, 'create_front_settings'])->name('create_front_mode');
         Route::post('/create-article', [ArticleController::class, 'create'])->name('articles.create');
+        Route::get('/image/{id}', [ImageController::class, 'imagebyid'])->name('get-image-by-id');
     });
 });
 
