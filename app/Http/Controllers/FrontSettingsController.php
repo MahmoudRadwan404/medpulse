@@ -39,7 +39,7 @@ class FrontSettingsController extends Controller
     public function get_front_data()
     {
         try {
-            $front = FrontSittings::with(['images', 'videos'])->all();
+            $front = FrontSittings::with(['images', 'videos'])->get();
             return response()->json([
                 'message' => 'Front data retrieved successfully',
                 'data' => $front
