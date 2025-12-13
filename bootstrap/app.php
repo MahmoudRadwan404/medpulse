@@ -20,7 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Register middleware aliases
         $middleware->alias([
             'jwt.auth' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
-            'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class, // ← ADD THIS
+            'jwt.verify' => \App\Http\Middleware\JWTMiddleware::class, // ← ADD THIS
             'role.check' => \App\Http\Middleware\RoleCheckMiddleware::class,
         ]);
     })
