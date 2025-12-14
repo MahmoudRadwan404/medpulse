@@ -138,15 +138,12 @@ Route::middleware(['jwt.verify'])->group(function () {
         Route::get('/contact-form/{id}', [ContactFormController::class, 'show'])->name('contact-forms.show');
         Route::post('/contact-form/{id}', [ContactFormController::class, 'update'])->name('contact-forms.update');
         Route::delete('/contact-form/{id}', [ContactFormController::class, 'destroy'])->name('contact-forms.delete');
-        Route::get('/home-settings', [SettingsController::class, 'get_or_create'])->name('settings.get-or-create');
         Route::post('/home-settings', [SettingsController::class, 'update'])->name('settings.update');
-        Route::get('/get-front-data', [FrontSettingsController::class, 'get_front_data'])->name('get_front_data');
         Route::post('/create-front-mode', [FrontSettingsController::class, 'create_front_settings'])->name('create_front_mode');
         Route::post('/create-article', [ArticleController::class, 'create'])->name('articles.create');
         Route::get('/image/{id}', [ImageController::class, 'imagebyid'])->name('get-image-by-id');
+        Route::get('/home-settings', [SettingsController::class, 'get_or_create'])->name('settings.get-or-create');
     });
 });
+Route::get('/get-front-data', [FrontSettingsController::class, 'get_front_data'])->name('get_front_data');
 
-//filter by title
-
-//filter by speciality year/city
