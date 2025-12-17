@@ -9,6 +9,7 @@ use App\Http\Controllers\EventAnalysisController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ExpertController;
 use App\Http\Controllers\FrontSettingsController;
+use App\Http\Controllers\GeminiController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\permissions\PermissionController;
 use App\Http\Controllers\roles\RoleController;
@@ -147,3 +148,5 @@ Route::middleware(['jwt.verify'])->group(function () {
 });
 Route::get('/get-front-data', [FrontSettingsController::class, 'get_front_data'])->name('get_front_data');
 
+//Route::get('/test-gemini',[GeminiController::class,'testAi']);
+//Route::post('/test-gemini',[GeminiController::class,'testAi']);
