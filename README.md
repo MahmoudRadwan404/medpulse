@@ -1,248 +1,344 @@
-MedPulse API Documentation
-A comprehensive RESTful API for managing medical conferences, articles, experts, and events. Built with Laravel and PostgreSQL.
-📋 Table of Contents
+# MedPulse API Documentation
 
-Features
-Prerequisites
-Installation
-API Endpoints
-Authentication
-Usage Examples
-Database Schema
-Contributing
+A comprehensive medical conference and content management system API built with Laravel.
 
-✨ Features
+## 📋 Table of Contents
 
-User Management: Role-based access control with JWT authentication
-Permission System: Granular permissions for all resources
-Medical Content: Articles with categories, authors, and multilingual support
-Event Management: Medical conferences and events with analysis
-Expert Profiles: Comprehensive expert information with specialties and contacts
-Media Handling: Images and videos for articles, events, and experts
-Contact Forms: User inquiry management system
-Frontend Settings: Configurable landing page modes
+- [Overview](#overview)
+- [Features](#features)
+- [Technology Stack](#technology-stack)
+- [Installation](#installation)
+- [Authentication](#authentication)
+- [API Endpoints](#api-endpoints)
+- [Database Schema](#database-schema)
+- [Usage Examples](#usage-examples)
+- [Contributing](#contributing)
+- [License](#license)
 
-🔧 Prerequisites
+## 🔍 Overview
 
-PHP 8.2 or higher
-PostgreSQL
-Composer
-Laravel 10.x
+MedPulse is a robust API designed to manage medical conferences, articles, experts, events, and related content. It provides a complete solution for medical content management with role-based access control and comprehensive data management capabilities.
 
-🚀 Installation
+## ✨ Features
 
-Clone the repository
+### Core Functionality
+- **User Management** - Complete user authentication and authorization system
+- **Role-Based Access Control** - Granular permissions system with customizable roles
+- **Medical Content Management** - Articles, events, and expert profiles
+- **Conference Management** - Event tracking, analysis, and speaker management
+- **Media Handling** - Image and video upload capabilities
+- **Contact Management** - Expert contacts and general inquiry forms
+- **Multilingual Support** - Arabic and English content support
 
-bashgit clone <repository-url>
+### Advanced Features
+- JWT-based authentication
+- Password reset functionality
+- Event analysis and rating system
+- Article categorization
+- Expert specialization tracking
+- Contact form management
+- Frontend configuration system
+
+## 🛠 Technology Stack
+
+- **Framework**: Laravel (PHP 8.2.12)
+- **Database**: PostgreSQL
+- **Authentication**: JWT (JSON Web Tokens)
+- **API Architecture**: RESTful
+
+## 📦 Installation
+
+### Prerequisites
+- PHP >= 8.2.12
+- PostgreSQL
+- Composer
+
+### Setup Steps
+
+1. **Clone the repository**
+```bash
+git clone <repository-url>
 cd medpulse
+```
 
-Install dependencies
+2. **Install dependencies**
+```bash
+composer install
+```
 
-bashcomposer install
-
-Environment setup
-
-bashcp .env.example .env
+3. **Environment Configuration**
+```bash
+cp .env.example .env
 php artisan key:generate
+```
 
-Configure database
-
-envDB_CONNECTION=pgsql
+4. **Configure Database**
+Update your `.env` file with PostgreSQL credentials:
+```env
+DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
 DB_PORT=5432
 DB_DATABASE=medpulse
 DB_USERNAME=your_username
 DB_PASSWORD=your_password
+```
 
-Run migrations
+5. **Run Migrations**
+```bash
+php artisan migrate
+```
 
-bashphp artisan migrate
+6. **Seed Database (Optional)**
+```bash
+php artisan db:seed
+```
 
-Start the server
+7. **Start Development Server**
+```bash
+php artisan serve
+```
 
-bashphp artisan serve
-The API will be available at http://127.0.0.1:8000
-🔐 Authentication
-This API uses JWT (JSON Web Tokens) for authentication.
-Login
-httpPOST /api/login
+The API will be available at `http://127.0.0.1:8000`
+
+## 🔐 Authentication
+
+### Login
+```http
+POST /api/login
+Content-Type: application/x-www-form-urlencoded
+
+email=user@example.com&password=yourpassword
+```
+
+**Response:**
+```json
+{
+    "access token": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+    "expiresIn": "604800 s"
+}
+```
+
+### Using the Token
+Include the JWT token in subsequent requests:
+```http
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc...
+```
+
+## 📚 API Endpoints
+
+### Authentication & Users
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | `/api/create-user` | Create new user | ✅ |
+| POST | `/api/login` | User login | ❌ |
+| GET | `/api/users` | List all users | ✅ |
+| GET | `/api/user/{id}` | Get user details | ✅ |
+| POST | `/api/update-user/{id}` | Update user | ✅ |
+| DELETE | `/api/user/{id}` | Delete user | ✅ |
+| POST | `/api/forget` | Request password reset | ❌ |
+
+### Permissions
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/create-permission` | Create permission |
+| GET | `/api/permissions` | List permissions |
+| GET | `/api/permission/{id}` | Get permission |
+| POST | `/api/permission/{id}` | Update permission |
+| DELETE | `/api/permission/{id}` | Delete permission |
+
+### Roles
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/create-role` | Create role |
+| GET | `/api/roles` | List all roles |
+| GET | `/api/role/{id}` | Get role details |
+| POST | `/api/role/{id}` | Update role |
+| DELETE | `/api/role/{id}` | Delete role |
+| POST | `/api/role/attach-permission/{id}` | Attach permissions to role |
+| POST | `/api/role/deattach-permission/{id}` | Detach permissions from role |
+
+### Articles
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/create-article` | Create article |
+| GET | `/api/articles` | List all articles |
+| GET | `/api/article/{id}` | Get article details |
+| POST | `/api/article/{id}` | Update article |
+| DELETE | `/api/article/{id}` | Delete article |
+
+### Article Categories
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/create-category` | Create category |
+| GET | `/api/article-categories` | List categories |
+| GET | `/api/article-category/{id}` | Get category |
+
+### Events
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/event` | Create event |
+| GET | `/api/events` | List all events (paginated) |
+| GET | `/api/event/{id}` | Get event details |
+| POST | `/api/event/{id}` | Update event |
+| DELETE | `/api/event/{id}` | Delete event |
+
+### Event Analysis
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/event-analysis` | Create event analysis |
+| POST | `/api/event-analysis/update/{id}` | Update analysis |
+
+### Experts
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/expert` | Create expert profile |
+| GET | `/api/experts` | List all experts (paginated) |
+| GET | `/api/expert/{id}` | Get expert details |
+| POST | `/api/expert/{id}` | Update expert |
+| DELETE | `/api/expert/{id}` | Delete expert |
+
+### Authors
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/create-author` | Create author |
+| GET | `/api/authors` | List all authors |
+| GET | `/api/author/{id}` | Get author details |
+| POST | `/api/author/{id}` | Update author |
+| DELETE | `/api/author/{id}` | Delete author |
+
+### Media Management
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/image` | Upload images |
+| DELETE | `/api/image/{id}` | Delete image |
+| POST | `/api/video` | Add video |
+
+### Contact Management
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/contact` | Create expert contact |
+| GET | `/api/contact/{id}` | Get contact details |
+| POST | `/api/contact-form` | Submit contact form |
+| GET | `/api/contact-form` | List contact forms (paginated) |
+| GET | `/api/contact-form/{id}` | Get contact form |
+| POST | `/api/contact-form/{id}` | Update contact form status |
+| DELETE | `/api/contact-form/{id}` | Delete contact form |
+
+### Frontend Settings
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/create-front-mode` | Create frontend mode setting |
+| GET | `/api/get-front-data/{id}` | Get frontend settings |
+
+## 📊 Database Schema
+
+### Key Tables
+
+#### Users
+- `id`, `name`, `email`, `password`, `role_id`
+- Relationships: belongs to Role
+
+#### Roles
+- `id`, `name`, `description`
+- Relationships: has many Permissions (many-to-many)
+
+#### Permissions
+- `id`, `name`, `description`
+- 69 predefined permissions covering all system operations
+
+#### Articles
+- `id`, `category_id`, `title_en`, `title_ar`, `description_en`, `description_ar`
+- Relationships: belongs to Category, has many Authors
+
+#### Events
+- `id`, `title_en`, `title_ar`, `location`, `date_of_happening`, `stars`, `rate`, `organizer_en`, `organizer_ar`, `subjects`, `description_en`, `description_ar`
+- Relationships: has one EventAnalysis, has many Images/Videos
+
+#### Experts
+- `id`, `name_en`, `name_ar`, `job_en`, `job_ar`, `medpulse_role_en`, `medpulse_role_ar`, `evaluated_specialties`, `number_of_events`, `years_of_experience`
+- Relationships: has many Contacts, Images, Videos
+
+#### Event Analysis
+- `id`, `event_id`, `content_rate`, `organisation_rate`, `speaker_rate`, `sponsering_rate`, `scientific_impact_rate`, `total`
+- Calculated total rating from component ratings
+
+## 💡 Usage Examples
+
+### Creating a User
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/create-user \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -F "name=Ahmed" \
+  -F "email=ahmed@example.com" \
+  -F "password=securepassword" \
+  -F "role_id=4"
+```
+
+### Creating an Article
+
+```json
+POST /api/create-article
+Authorization: Bearer YOUR_TOKEN
 Content-Type: application/json
 
 {
-  "email": "user@example.com",
-  "password": "password"
+    "category_id": 1,
+    "title_en": "Advances in Cardiology",
+    "title_ar": "تطورات في طب القلب",
+    "description_en": "Latest developments in cardiac care...",
+    "description_ar": "أحدث التطورات في رعاية القلب..."
 }
-Response:
-json{
-  "access token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
-  "expiresIn": "604800 s"
-}
-Using the token
-Include the token in subsequent requests:
-httpAuthorization: Bearer <your_token_here>
-📡 API Endpoints
-Users
-MethodEndpointDescriptionAuth RequiredPOST/api/create-userCreate a new userYesGET/api/usersGet all usersYesGET/api/user/{id}Get specific userYesPOST/api/update-user/{id}Update userYesDELETE/api/user/{id}Delete userYesPOST/api/loginUser loginNoPOST/api/forgetPassword resetNo
-Permissions
-MethodEndpointDescriptionPOST/api/create-permissionCreate permissionGET/api/permissionsList all permissionsGET/api/permission/{id}Get specific permissionPOST/api/permission/{id}Update permissionDELETE/api/permission/{id}Delete permission
-Roles
-MethodEndpointDescriptionPOST/api/create-roleCreate roleGET/api/rolesList all rolesGET/api/role/{id}Get specific rolePOST/api/role/{id}Update roleDELETE/api/role/{id}Delete rolePOST/api/role/attach-permission/{id}Attach permissions to rolePOST/api/role/deattach-permission/{id}Detach permissions from role
-Articles
-MethodEndpointDescriptionAuth RequiredPOST/api/create-articleCreate articleYesGET/api/articlesList all articlesNoGET/api/article/{id}Get specific articleNoPOST/api/article/{id}Update articleYesDELETE/api/article/{id}Delete articleYes
-Article Categories
-MethodEndpointDescriptionPOST/api/create-categoryCreate categoryGET/api/article-categoriesList categoriesGET/api/article-category/{id}Get category
-Events
-MethodEndpointDescriptionPOST/api/eventCreate eventGET/api/eventsList all eventsGET/api/event/{id}Get specific eventPOST/api/event/{id}Update eventDELETE/api/event/{id}Delete event
-Event Analysis
-MethodEndpointDescriptionPOST/api/event-analysisCreate analysisPOST/api/event-analysis/update/{id}Update analysis
-Experts
-MethodEndpointDescriptionPOST/api/expertCreate expertGET/api/expertsList all expertsGET/api/expert/{id}Get specific expertPOST/api/expert/{id}Update expertDELETE/api/expert/{id}Delete expert
-Authors
-MethodEndpointDescriptionPOST/api/create-authorCreate authorGET/api/authorsList all authorsGET/api/author/{id}Get specific authorPOST/api/author/{id}Update authorDELETE/api/author/{id}Delete author
-Media
-MethodEndpointDescriptionPOST/api/imageUpload imagesDELETE/api/image/{id}Delete imagePOST/api/videoCreate video entry
-Contact
-MethodEndpointDescriptionPOST/api/contactCreate expert contactGET/api/contact/{id}Get contact details
-Contact Forms
-MethodEndpointDescriptionPOST/api/contact-formSubmit contact formGET/api/contact-formList all formsGET/api/contact-form/{id}Get specific formPOST/api/contact-form/{id}Update form statusDELETE/api/contact-form/{id}Delete form
-Frontend Settings
-MethodEndpointDescriptionPOST/api/create-front-modeSet display modeGET/api/get-front-data/{id}Get frontend settings
-📝 Usage Examples
-Create an Article
-httpPOST /api/create-article
-Authorization: Bearer <token>
+```
+
+### Creating an Event
+
+```json
+POST /api/event
 Content-Type: application/json
 
 {
-  "category_id": 1,
-  "title_en": "Advances in Heart Surgery",
-  "title_ar": "تطورات في جراحة القلب",
-  "description_en": "Recent innovations in cardiovascular surgery...",
-  "description_ar": "الابتكارات الحديثة في جراحة القلب..."
+    "title_en": "International Cardiology Conference 2024",
+    "title_ar": "المؤتمر الدولي لأمراض القلب ٢٠٢٤",
+    "location": "Dubai, UAE",
+    "date_of_happening": "2024-05-15",
+    "stars": 5,
+    "rate": 9.5,
+    "organizer_en": "World Heart Federation",
+    "organizer_ar": "الاتحاد العالمي للقلب",
+    "subjects": ["Cardiology", "Heart Failure"],
+    "description_en": "Annual gathering of cardiology experts...",
+    "description_ar": "الاجتماع السنوي لخبراء أمراض القلب..."
 }
-Create an Event
-httpPOST /api/event
-Content-Type: application/json
+```
 
-{
-  "title_en": "International Cardiology Conference 2024",
-  "title_ar": "المؤتمر الدولي لأمراض القلب ٢٠٢٤",
-  "location": "Dubai, UAE",
-  "date_of_happening": "2024-05-15",
-  "stars": 5,
-  "rate": 9.5,
-  "organizer_en": "World Heart Federation",
-  "organizer_ar": "الاتحاد العالمي للقلب",
-  "description_en": "Annual gathering of cardiology experts...",
-  "description_ar": "الاجتماع السنوي لخبراء أمراض القلب...",
-  "subjects": ["Cardiology", "Interventional Procedures"]
-}
-Upload Images
-httpPOST /api/image
-Content-Type: multipart/form-data
+### Uploading Images
 
-images[0][file]: <file>
-images[0][type]: profile
-images[0][expert_id]: 1
-images[1][file]: <file>
-images[1][type]: content
-images[1][expert_id]: 1
-Submit Contact Form
-httpPOST /api/contact-form
-Content-Type: application/json
+```bash
+curl -X POST http://127.0.0.1:8000/api/image \
+  -F "images[0][file]=@/path/to/image1.jpg" \
+  -F "images[0][type]=profile" \
+  -F "images[0][expert_id]=1" \
+  -F "images[1][file]=@/path/to/image2.jpg" \
+  -F "images[1][type]=content" \
+  -F "images[1][expert_id]=1"
+```
 
-{
-  "full_name": "John Smith",
-  "organisation": "ABC Medical Center",
-  "email": "john.smith@example.com",
-  "number": "+12345678901",
-  "asking_type": "General Inquiry",
-  "details": "I would like to inquire about...",
-  "status": "new"
-}
-🗄️ Database Schema
-Key Tables
+### Role Permissions
 
-users: User accounts with role assignments
-roles: User roles (owner, admin, editor, etc.)
-permissions: Granular permission definitions
-articles: Medical articles with multilingual support
-article_categories: Article categorization
-events: Medical conferences and events
-event_analyses: Detailed event evaluations
-experts: Medical expert profiles
-authors: Article and content authors
-images: Media storage for all entities
-videos: Video content references
-contacts: Expert contact information
-contact_forms: User inquiry submissions
-
-Relationships
-
-Users → Roles (many-to-one)
-Roles → Permissions (many-to-many)
-Articles → Categories (many-to-one)
-Articles → Authors (many-to-many)
-Events → Event Analysis (one-to-one)
-Experts → Contacts (one-to-many)
-All entities → Images/Videos (polymorphic)
-
-🔒 Permission System
-The API includes 69 granular permissions across categories:
-
-Permissions Management: create, list, show, update, delete
-Roles Management: create, list, show, update, delete, attach/detach permissions
-Users Management: create, login, update, show, delete, list, password reset
-Article Categories: create, show, update, delete, list
-Articles: create, list, show, delete, update, attach/detach authors
-Authors: create, list, show, update, delete
-Media: create images, delete images, create/update/delete/show videos
-Events: create, list, show, delete, update, attach/detach authors
-Event Analysis: create, update, delete
-Experts: show, list, create, update, delete
-Contacts: create, show, update
-Contact Forms: create, list, show, update, delete
-Settings: get-or-create, update, events-articles
-
-🌐 Multilingual Support
-The API supports bilingual content (English/Arabic) for:
-
-Article titles and descriptions
-Event details
-Expert information
-Author profiles
-Category names
-Contact information
-
-All text fields have _en and _ar suffixes for language-specific content.
-📦 Response Format
-Success Response
-json{
-  "message": "Operation successful",
-  "data": {
-    // Response data
-  }
-}
-Error Response
-json{
-  "message": "Error description",
-  "errors": {
-    // Validation errors if applicable
-  }
-}
-Paginated Response
-json{
-  "data": {
-    "current_page": 1,
-    "data": [...],
-    "first_page_url": "...",
-    "last_page": 2,
-    "per_page": 6,
-    "total": 12
-  }
-}
-🛠️ Development
-Running Tests
-bashphp artisan test
-Database Seeding
-bashphp artisan db:seed
+**Owner Role** (Full System Access):
+- All 69 permissions including:
+  - Permission management (create, read, update, delete)
+  - Role management
