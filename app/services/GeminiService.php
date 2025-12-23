@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\StaticData;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Request;
 
 class GeminiService
 {
@@ -12,15 +14,25 @@ class GeminiService
     
     public function __construct()
     {
-        $this->apiKey = env('GEMINI_API_KEY');
-        // Use the correct model name
-        $this->model = env('GEMINI_MODEL', 'gemini-1.5-flash');
-    }
+        $data = StaticData::where('title', 'gemini')->first();
+
+        if (
+            !$data ||
+            !($attributes = json_decode($data->attributes, true)) ||
+            !isset($attributes['key'], $attributes['model'])
+        ) {
+            throw new \Exception('Invalid or missing Gemini configuration');
+        }
+        
+        $this->apiKey = $attributes['key'];
+        $this->model  = $attributes['model'];
+        
+    }//env('GEMINI_API_KEY')||env('GEMINI_MODEL', 'gemini-1.5-flash')||
 
     /**
      * Generate text from prompt
      */
-    public function generateText(string $prompt, array $options = [])
+    public function generateText( $prompt, array $options = [])
     {
         try {
             // Correct API endpoint with proper model name
@@ -87,7 +99,7 @@ class GeminiService
     /**
      * Generate text with streaming (optional)
      */
-    public function generateTextStream(string $prompt, array $options = [])
+    public function generateTextStream( $prompt, array $options = [])
     {
         try {
             $url = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:streamGenerateContent?key={$this->apiKey}";

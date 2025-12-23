@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Event;
 use App\Models\Expert;
+use App\Models\StaticData;
 use App\Services\GeminiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -16,12 +17,8 @@ class GeminiController extends Controller
         try {
             // Initialize the service
             $gemini = new GeminiService();
-            $sent = $request->input("data");
+            $sent = $request->input('data');
 
-            //$sentString = json_encode($sent, JSON_UNESCAPED_UNICODE);
-            // Make a simple request
-            //$prompt = "i want to use you as intent detector for this sentence give me one of the three options {info , form start form submit} $sent";
-            //$prompt = "make json object of{organisation,email,number,asking_type,details} from $sentString and validate it response should only contains json object with the key i gave you to be ";
             $prompt1 = <<<PROMPT
             You are an intent detector.
             Classify the user message into ONE of these intents ONLY:
@@ -38,37 +35,43 @@ class GeminiController extends Controller
             User message:
             "$sent"
             PROMPT;
+
             $response = $gemini->generateText($prompt1);
+
             if ($response == 'info') {
                 $experts = Expert::with('contacts')->get();
                 $articles = Article::with(['category', 'authors'])->get();
                 $events = Event::with(['analysis'])->get();
-                //  $context = [$experts, $events, $articles];
-                $prompt2 = <<<PROMPT
-                DATABASE CONTEXT:
-                
-                EXPERTS:
-                {$experts}
-                
-                ARTICLES:
-                {$articles}
-                
-                EVENTS:
-                {$events}
-                
-                USER QUESTION:
-                "{$sent}"
-                
-                RULES:
-                - Use ONLY the database context
-                - If not found, reply with general talk about website and end it with that all whatr i know
-                - Use exact titles/names
-                - Respond with ONLY valid string
-                - No markdown, no extra text
-                -answer with the language you asked by in user question
-                
-                ANSWER:
-                PROMPT;
+
+                // Convert collections to JSON strings BEFORE using in heredoc
+                $expertsJson = json_encode($experts, JSON_UNESCAPED_UNICODE);
+                $articlesJson = json_encode($articles, JSON_UNESCAPED_UNICODE);
+                $eventsJson = json_encode($events, JSON_UNESCAPED_UNICODE);
+
+                // Use concatenation instead of heredoc interpolation
+                $prompt2 = "DATABASE CONTEXT:
+
+EXPERTS:
+" . $expertsJson . "
+
+ARTICLES:
+" . $articlesJson . "
+
+EVENTS:
+" . $eventsJson . "
+
+USER QUESTION:
+\"" . $sent . "\"
+
+RULES:
+- Use ONLY the database context
+- If not found, reply with general talk about website and end it with that all what i know
+- Use exact titles/names
+- Respond with ONLY valid string
+- No markdown, no extra text
+- Answer with the language you asked by in user question
+
+ANSWER:";
 
                 $response = $gemini->generateText($prompt2);
                 return response()->json([
@@ -76,6 +79,7 @@ class GeminiController extends Controller
                     'prompt' => $sent,
                     'response' => $response
                 ]);
+
             } else if ($response == 'start_form') {
                 $prompt3 = <<<PROMPT
                 You are assisting with collecting collaboration information.
@@ -102,54 +106,83 @@ class GeminiController extends Controller
                 
                 RESPONSE:
                 PROMPT;
-                
+
                 $response = $gemini->generateText($prompt3);
                 return response()->json([
                     'success' => true,
                     'prompt' => $sent,
                     'response' => $response
                 ]);
+
             } else if ($response == 'submit_form') {
-                return response('heelo from third');
+                $prompt4 = "You must return ONLY valid JSON. No markdown code blocks, no backticks, no explanations, no additional text before or after.
 
+                Extract these fields from the user's input:
+                - full_name (string, required)
+                - organisation (string, required)
+                - email (string, required)
+                - number (string, required)
+                - asking_type (string, required)
+                - details (string, required)
+                
+                If any REQUIRED field is missing, return an error response in this format:
+                {
+                    \"success\": false,
+                    \"error\": \"Validation failed\",
+                    \"errors\": {
+                        \"full_name\": [\"Full name is required\"],
+                        \"email\": [\"Email is required\"],
+                        \"number\": [\"Number is required\"],
+                        \"asking_type\": [\"Asking type is required\"],
+                        \"details\": [\"Details is required\"]
+                    }
+                } for the missing one only
+                
+                If all required fields are present, return the extracted data in this format:
+                {
+                    \"success\": true,
+                    \"data\": {
+                        \"full_name\": \"value\",
+                        \"organisation\": \"value or null\",
+                        \"email\": \"value\",
+                        \"number\": \"value\",
+                        \"asking_type\": \"value\",
+                        \"details\": \"value\"
+                    }
+                }
+                
+                User input: " . $sent . "
+                
+                Response (JSON only, no markdown):";
+                $response = $gemini->generateText($prompt4);
+                $data = json_decode($response, true);
+                // Output the clean JSON
+
+                return response()->json($data);
             }
-            
-            //            $response = $gemini->listModels();
-            // $clean = preg_replace('/```json|```/i', '', $response);
-            // $data = json_decode(trim($clean), true);
-
-            /*  $validator = Validator::make($data, [
-                  'organisation' => 'required|string|min:3|max:255',
-                  'email' => 'required|email',
-                  'number' => [
-                      'required',
-                      'string',
-                      'regex:/^\+?[0-9\s\-\(\)]{7,20}$/'
-                  ],
-                  'asking_type' => 'required|string|max:100',
-                  'details' => 'required|string|min:10',
-              ]);
-              // 3️⃣ Check for errors
-
-              if ($validator->fails()) {
-                  return response()->json([
-                      'success' => false,
-                      'errors' => $validator->errors()->getMessages(),
-                  ], 422);
-              }*/
-            // return response()->json([
-            //     'success' => true,
-            //   //  'prompt' => $prompt,
-            //     'response' => $data
-            // ]);
 
         } catch (\Exception $e) {
-
-
             return response()->json([
                 'success' => false,
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+    public function addKeyModel(Request $request)
+    {
+        $key = $request->input('key');
+        $model = $request->input('model');
+        $gemini = StaticData::updateOrCreate(
+            ["title" => "gemini"],
+            [
+                "attributes" => json_encode(
+                    [
+                        "key" => $key,
+                        "model" => $model
+                    ]
+                )
+            ]
+        );
+        return response()->json($gemini);
     }
 }

@@ -127,6 +127,7 @@ Route::middleware(['jwt.verify'])->group(function () {
         Route::get('/contact/{id}', [ContactController::class, 'show'])->name('contacts.show');//gl
         Route::post('/contact-update/{id}', [ContactController::class, 'update'])->name('contacts.update');
         Route::get('/contact-form', [ContactFormController::class, 'index'])->name('contact-forms.list');
+        //needs update after selection to be opened
         Route::get('/contact-form/{id}', [ContactFormController::class, 'show'])->name('contact-forms.show');
         Route::post('/contact-form/{id}', [ContactFormController::class, 'update'])->name('contact-forms.update');
         Route::delete('/contact-form/{id}', [ContactFormController::class, 'destroy'])->name('contact-forms.delete');
@@ -135,13 +136,20 @@ Route::middleware(['jwt.verify'])->group(function () {
         Route::post('/create-article', [ArticleController::class, 'create'])->name('articles.create');
         Route::get('/image/{id}', [ImageController::class, 'imagebyid'])->name('get-image-by-id');
         Route::get('/home-settings', [SettingsController::class, 'get_or_create'])->name('settings.get-or-create');
+       //adding geminimodel
+        Route::post('/add-gemini',[GeminiController::class,'addKeyModel']);
     });
 });
 Route::get('/get-front-data', [FrontSettingsController::class, 'get_front_data'])->name('get_front_data');
+//gemini
+Route::post('/test-gemini',[GeminiController::class,'testAi']);
 
-//Route::get('/test-gemini',[GeminiController::class,'testAi']);
-//Route::post('/test-gemini',[GeminiController::class,'testAi']);
 Route::post('/add-static',[StaticDataController::class,'create']);
 Route::post('/update-static',[StaticDataController::class,'update']);
 Route::get('/static',[StaticDataController::class,'findByTitle']);
 Route::get('/static/{id}',[StaticDataController::class,'findByid']);
+
+Route::post('/contact-form/reply/{id}',[ContactFormController::class,'reply']);
+Route::get('/notification',[ContactFormController::class,'notification']);
+
+//form requests reply/id to wend to mail and update to answered } notification:number of new}  

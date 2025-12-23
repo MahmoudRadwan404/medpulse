@@ -144,7 +144,7 @@ class UserController extends Controller
                 'created_at' => $createdAt,
                 'expires_at' => $expiresAt
             ]);
-            Mail::to($email)->send(new ForgetPasswordMailer($token));//
+            Mail::to($email)->send(mailable: new ForgetPasswordMailer($token));//
 
             return response(['message' => 'email sent']);
         } catch (Exception $e) {
