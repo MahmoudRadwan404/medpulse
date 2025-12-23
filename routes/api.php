@@ -14,6 +14,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\permissions\PermissionController;
 use App\Http\Controllers\roles\RoleController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\StaticDataController;
 use App\Http\Controllers\user\UserController;
 use App\Http\Controllers\VideoController;
 use Illuminate\Support\Facades\Route;
@@ -44,10 +45,6 @@ Route::get('/authors', [AuthorController::class, 'index'])->name('authors.list')
 Route::get('/author/{id}', [AuthorController::class, 'show'])->name('authors.show');//gl
 
 // ==============================
-// IMAGE ROUTES
-// ==============================
-
-// ==============================
 // VIDEO ROUTES
 // ==============================
 Route::get('/video/{id}', [VideoController::class, 'show'])->name('videos.show');//gl
@@ -58,12 +55,6 @@ Route::get('/video/{id}', [VideoController::class, 'show'])->name('videos.show')
 Route::get('/events', [EventController::class, 'index'])->name('events.list');//gl
 Route::get('/event/{id}', [EventController::class, 'show'])->name('events.show');//gl
 Route::get('/event-filter', [EventController::class, 'events_filter'])->name('filter_events');//gl
-// Adding and removing authors to events
-
-// ==============================
-// EVENT ANALYSIS ROUTES
-// ==============================
-
 // ==============================
 // EXPERT ROUTES
 // ==============================
@@ -150,3 +141,7 @@ Route::get('/get-front-data', [FrontSettingsController::class, 'get_front_data']
 
 //Route::get('/test-gemini',[GeminiController::class,'testAi']);
 //Route::post('/test-gemini',[GeminiController::class,'testAi']);
+Route::post('/add-static',[StaticDataController::class,'create']);
+Route::post('/update-static',[StaticDataController::class,'update']);
+Route::get('/static',[StaticDataController::class,'findByTitle']);
+Route::get('/static/{id}',[StaticDataController::class,'findByid']);

@@ -15,7 +15,7 @@ return [
      * Allowed origins - specify your frontend URL(s)
      * Use ['*'] for development, but specify exact domains in production
      */
-    'allowed_origins' => ['*'], // or ['http://localhost:3000', 'https://yourdomain.com']
+    'allowed_origins' => explode(',', env('CORS_ALLOWED_ORIGINS', '*')), // or ['http://localhost:3000', 'https://yourdomain.com']
 
     'allowed_origins_patterns' => [],
 

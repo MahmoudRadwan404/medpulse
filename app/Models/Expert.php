@@ -31,6 +31,7 @@ protected $guarded='id';
         'membership_en',
         'subspecialities_ar',
         'membership_ar',
+        'covaredEventsIds'
     ];
 
     protected $casts = [
@@ -38,6 +39,7 @@ protected $guarded='id';
         'evaluated_specialties_ar' => 'array',
         'subspecialities_en' => 'array',
         'membership_en' => 'array',
+        'covaredEventsIds' => 'array',
         'subspecialities_ar' => 'array',
         'membership_ar' => 'array',
         'number_of_events' => 'integer',

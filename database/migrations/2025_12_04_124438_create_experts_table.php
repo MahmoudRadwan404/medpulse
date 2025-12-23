@@ -35,12 +35,9 @@ return new class extends Migration
             $table->json('membership_en')->nullable();
             $table->json('subspecialities_ar')->nullable();
             $table->json('membership_ar')->nullable();
+            $table->json('coveredEventsIds')->nullable();
             $table->timestamps();
-            // $table->foreignId('role_id')
-            // ->nullable()
-            // ->after('id')
-            // ->constrained('role')
-            // ->onDelete('set null');
+           
         });
     }
         

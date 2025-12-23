@@ -55,7 +55,8 @@ class ExpertController extends Controller
                 'subspecialities_en' => 'nullable|array',
                 'membership_en' => 'nullable|array',
                 'subspecialities_ar' => 'nullable|array',
-                'membership_ar' => 'nullable|array'
+                'membership_ar' => 'nullable|array',
+                'coveredEventsIds' => 'nullable|array'
             ]);
 
             $expert = Expert::create([
@@ -81,6 +82,7 @@ class ExpertController extends Controller
                 'membership_en' => $request->input("membership_en") ?? null,
                 'subspecialities_ar' => $request->input("subspecialities_ar") ?? null,
                 'membership_ar' => $request->input("membership_ar") ?? null,
+                'coveredEventsIds' => $request->input("coveredEventsIds") ?? null,
             ]);
 
             return response()->json([
@@ -118,7 +120,8 @@ class ExpertController extends Controller
                 'subspecialities_en' => 'nullable|array',
                 'membership_en' => 'nullable|array',
                 'subspecialities_ar' => 'nullable|array',
-                'membership_ar' => 'nullable|array'
+                'membership_ar' => 'nullable|array',
+                'coveredEventsIds' => 'nullable|array',
             ]);
 
             $expert = Expert::findOrFail($id);
@@ -146,6 +149,7 @@ class ExpertController extends Controller
                 'membership_en' => $request->input('membership_en') ?? $expert->membership_en,
                 'subspecialities_ar' => $request->input('subspecialities_ar') ?? $expert->subspecialities_ar,
                 'membership_ar' => $request->input('membership_ar') ?? $expert->membership_ar,
+                'coveredEventsIds' => $request->input('coveredEventsIds') ?? $expert->coveredEventsIds,
             ]);
 
             return response()->json([
