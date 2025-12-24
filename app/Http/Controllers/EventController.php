@@ -35,6 +35,7 @@ class EventController extends Controller
                 'title_en' => 'required|string|max:255',
                 'title_ar' => 'required|string|max:255',
                 'location' => 'required|string|max:255',
+                'location_ar' => 'required|string|max:255',
                 'date_of_happening' => 'required|date',
                 'stars' => 'nullable|integer|min:0|max:5',
                 'rate' => 'nullable|numeric|min:0|max:10',
@@ -62,6 +63,7 @@ class EventController extends Controller
                     'title_en' => $request->input("title_en"),
                     'title_ar' => $request->input("title_ar"),
                     'location' => $request->input("location"),
+                    'location_ar' => $request->input("location_ar"),
                     'date_of_happening' => $request->input("date_of_happening"),
                     'stars' => $request->input("stars") ?? 0, // Default to 0 instead of null
                     'rate' => $request->input("rate") ?? 0, // Default to 0 instead of null
@@ -94,6 +96,7 @@ class EventController extends Controller
                 'title_en' => 'sometimes|nullable|string|max:255',
                 'title_ar' => 'sometimes|nullable|string|max:255',
                 'location' => 'sometimes|nullable|string|max:255',
+                'location_ar' => 'sometimes|nullable|string|max:255',
                 'date_of_happening' => 'sometimes|nullable|date',
                 'stars' => 'sometimes|nullable|integer|min:0|max:5',
                 'rate' => 'sometimes|nullable|numeric|min:0|max:10',
@@ -121,6 +124,7 @@ class EventController extends Controller
                 'title_en' => $request->filled('title_en') ? $request->input('title_en') : $event->title_en,
                 'title_ar' => $request->filled('title_ar') ? $request->input('title_ar') : $event->title_ar,
                 'location' => $request->filled('location') ? $request->input('location') : $event->location,
+                'location_ar' => $request->filled('location_ar') ? $request->input('location_ar') : $event->location_ar,
                 'date_of_happening' => $request->filled('date_of_happening') ? $request->input('date_of_happening') : $event->date_of_happening,
                 'stars' => $request->filled('stars') ? $request->input('stars') : $event->stars,
                 'rate' => $request->filled('rate') ? $request->input('rate') : $event->rate,

@@ -11,6 +11,7 @@ class Event extends Model
         'title_en',
         'title_ar',
         'location',
+        'location_ar',
         'date_of_happening',
         'stars',
         'rate',
