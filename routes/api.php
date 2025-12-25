@@ -136,25 +136,24 @@ Route::middleware(['jwt.verify'])->group(function () {
         Route::post('/create-front-mode', [FrontSettingsController::class, 'create_front_settings'])->name('create_front_mode');
         Route::post('/create-article', [ArticleController::class, 'create'])->name('articles.create');
         Route::get('/image/{id}', [ImageController::class, 'imagebyid'])->name('get-image-by-id');
-        Route::get('/home-settings', [SettingsController::class, 'get_or_create'])->name('settings.get-or-create');
         //adding geminimodel
     });
 });
-//
 Route::post('/add-gemini', [GeminiController::class, 'addKeyModel'])
     ->name('gemini.add');
 
 Route::post('/add-static', [StaticDataController::class, 'create'])
     ->name('static.create');
-
+    
 Route::post('/update-static', [StaticDataController::class, 'update'])
     ->name('static.update');
-
-Route::post('/contact-form/reply/{id}', [ContactFormController::class, 'reply'])
+    
+    Route::post('/contact-form/reply/{id}', [ContactFormController::class, 'reply'])
     ->name('contact.reply');
 
-Route::get('/notification', [ContactFormController::class, 'notification'])
+    Route::get('/notification', [ContactFormController::class, 'notification'])
     ->name('notification.index');
+//
 
 Route::get('/get-front-data', [FrontSettingsController::class, 'get_front_data'])->name('get_front_data');
 //
@@ -165,5 +164,4 @@ Route::get('/static', [StaticDataController::class, 'findByTitle']);
 Route::get('/static/{id}', [StaticDataController::class, 'findByid']);
 Route::get('/stats', [StaticDataController::class, 'stats']);
 
-
-//form requests reply/id to wend to mail and update to answered } notification:number of new}  
+Route::get('/home-settings', [SettingsController::class, 'get_or_create'])->name('settings.get-or-create');
