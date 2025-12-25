@@ -106,7 +106,7 @@ Route::middleware(['jwt.verify'])->group(function () {
         // Adding and removing authors
         Route::post('/attach-author-to-article', [AuthorController::class, 'attach_author_to_article'])->name('articles.attach-author');
         Route::post('/detach-author-from-article', [AuthorController::class, 'detach_author_from_article'])->name('articles.detach-author');
-        Route::get('/image/{id}',[ImageController::class,'imagebyid']);
+        Route::get('/image/{id}', [ImageController::class, 'imagebyid']);
         Route::post('/image', [ImageController::class, 'create'])->name('images.create');
         Route::delete('/image/{id}', [ImageController::class, 'destroy'])->name('images.delete');
         Route::post('/video', [VideoController::class, 'create'])->name('videos.create');
@@ -137,30 +137,33 @@ Route::middleware(['jwt.verify'])->group(function () {
         Route::post('/create-article', [ArticleController::class, 'create'])->name('articles.create');
         Route::get('/image/{id}', [ImageController::class, 'imagebyid'])->name('get-image-by-id');
         Route::get('/home-settings', [SettingsController::class, 'get_or_create'])->name('settings.get-or-create');
-       //adding geminimodel
+        //adding geminimodel
     });
 });
+//
 Route::post('/add-gemini', [GeminiController::class, 'addKeyModel'])
-->name('gemini.add');
-    
+    ->name('gemini.add');
+
 Route::post('/add-static', [StaticDataController::class, 'create'])
-->name('static.create');
+    ->name('static.create');
 
 Route::post('/update-static', [StaticDataController::class, 'update'])
-->name('static.update');
+    ->name('static.update');
 
 Route::post('/contact-form/reply/{id}', [ContactFormController::class, 'reply'])
-->name('contact.reply');
+    ->name('contact.reply');
 
 Route::get('/notification', [ContactFormController::class, 'notification'])
     ->name('notification.index');
-Route::get('/get-front-data', [FrontSettingsController::class, 'get_front_data'])->name('get_front_data');
-//gemini
-Route::post('/test-gemini',[GeminiController::class,'testAi']);
 
-Route::get('/static',[StaticDataController::class,'findByTitle']);
-Route::get('/static/{id}',[StaticDataController::class,'findByid']);
-Route::get('/stats',[StaticDataController::class,'stats']);
+Route::get('/get-front-data', [FrontSettingsController::class, 'get_front_data'])->name('get_front_data');
+//
+//gemini
+Route::post('/test-gemini', [GeminiController::class, 'testAi']);
+
+Route::get('/static', [StaticDataController::class, 'findByTitle']);
+Route::get('/static/{id}', [StaticDataController::class, 'findByid']);
+Route::get('/stats', [StaticDataController::class, 'stats']);
 
 
 //form requests reply/id to wend to mail and update to answered } notification:number of new}  

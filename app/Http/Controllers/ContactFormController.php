@@ -98,6 +98,7 @@ class ContactFormController extends Controller
             $contact = ContactForm::findOrFail($id);
             if ($contact->status == 'new') {
                 $contact->status = 'opened';
+                $contact->save();
             }
             return response()->json([
                 'message' => 'Contact retrieved successfully',
