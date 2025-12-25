@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\StaticData;
 use Illuminate\Http\Request;
-
+use App\Models\Article;
+use App\Models\Author;
+use App\Models\Event;
+use App\Models\Expert;
+use App\Models\ContactForm;
 class StaticDataController extends Controller
 {
     public function create(Request $request)
@@ -37,5 +41,21 @@ class StaticDataController extends Controller
             "attributes" => $attributes
         ]);
         return response()->json($data);
+    }
+    public function stats()
+    {
+        return response()->json([
+            'articles' => Article::count(),
+            'events'   => Event::count(),
+            'experts'  => Expert::count(),
+            'authors'  => Author::count(),
+
+            'contact_forms' => [
+                'total'    => ContactForm::count(),
+                'new'      => ContactForm::where('status', 'new')->count(),
+                'opened'   => ContactForm::where('status', 'opened')->count(),
+                'answered' => ContactForm::where('status', 'answered')->count(),
+            ]
+        ]);
     }
 }
