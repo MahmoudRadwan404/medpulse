@@ -104,6 +104,15 @@ class DatabaseSeeder extends Seeder
             
             // Front Settings Routes
             ['name' => 'create_front_mode', 'description' => 'Create front settings mode'],
+            ['name' => 'gemini.add', 'description' => 'Add Gemini key model'],
+    
+            // Static Data Routes
+            ['name' => 'static.create', 'description' => 'Create static data'],
+            ['name' => 'static.update', 'description' => 'Update static data'],
+            
+            // Contact Form Additional Routes
+            ['name' => 'contact.reply', 'description' => 'Reply to contact form'],
+            ['name' => 'notification.index', 'description' => 'View notifications']
         ];
         $timestamp = now();
         $permissions = array_map(function($permission) use ($timestamp) {
