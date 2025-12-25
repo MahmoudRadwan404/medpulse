@@ -106,6 +106,7 @@ Route::middleware(['jwt.verify'])->group(function () {
         // Adding and removing authors
         Route::post('/attach-author-to-article', [AuthorController::class, 'attach_author_to_article'])->name('articles.attach-author');
         Route::post('/detach-author-from-article', [AuthorController::class, 'detach_author_from_article'])->name('articles.detach-author');
+        Route::get('/image/{id}',[ImageController::class,'imagebyid']);
         Route::post('/image', [ImageController::class, 'create'])->name('images.create');
         Route::delete('/image/{id}', [ImageController::class, 'destroy'])->name('images.delete');
         Route::post('/video', [VideoController::class, 'create'])->name('videos.create');
