@@ -137,22 +137,22 @@ Route::middleware(['jwt.verify'])->group(function () {
         Route::post('/create-article', [ArticleController::class, 'create'])->name('articles.create');
         Route::get('/image/{id}', [ImageController::class, 'imagebyid'])->name('get-image-by-id');
         //adding geminimodel
+        Route::post('/add-gemini', [GeminiController::class, 'addKeyModel'])
+            ->name('gemini.add');
+        //should be in guards
+        Route::post('/add-static', [StaticDataController::class, 'create'])
+            ->name('static.create');
+            
+        Route::post('/update-static', [StaticDataController::class, 'update'])
+            ->name('static.update');
+            
+            Route::post('/contact-form/reply/{id}', [ContactFormController::class, 'reply'])
+            ->name('contact.reply');
+        //
+            Route::get('/notification', [ContactFormController::class, 'notification'])
+            ->name('notification.index');
     });
 });
-Route::post('/add-gemini', [GeminiController::class, 'addKeyModel'])
-    ->name('gemini.add');
-
-Route::post('/add-static', [StaticDataController::class, 'create'])
-    ->name('static.create');
-    
-Route::post('/update-static', [StaticDataController::class, 'update'])
-    ->name('static.update');
-    
-    Route::post('/contact-form/reply/{id}', [ContactFormController::class, 'reply'])
-    ->name('contact.reply');
-
-    Route::get('/notification', [ContactFormController::class, 'notification'])
-    ->name('notification.index');
 //
 
 Route::get('/get-front-data', [FrontSettingsController::class, 'get_front_data'])->name('get_front_data');
