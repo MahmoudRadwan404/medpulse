@@ -77,10 +77,10 @@ Route::get('/events-articles', [SettingsController::class, 'events_articles'])->
 
 Route::middleware(['jwt.verify'])->group(function () {
     Route::middleware(['role.check'])->group(function () {
-        Route::post('/create-permission', [PermissionController::class, 'create'])->name('permissions.create');
+       // Route::post('/create-permission', [PermissionController::class, 'create'])->name('permissions.create');
         Route::get('/users', [UserController::class, 'getUsers'])->name('users.list');
         Route::post('/permission/{id}', [PermissionController::class, 'updatePermission'])->name('permissions.update');
-        Route::delete('/permission/{id}', [PermissionController::class, 'deletePermission'])->name('permissions.delete');
+        //Route::delete('/permission/{id}', [PermissionController::class, 'deletePermission'])->name('permissions.delete');
         Route::get('/permissions', [PermissionController::class, 'getPermissions'])->name('permissions.list');
         Route::get('/permission/{id}', [PermissionController::class, 'getPermission'])->name('permissions.show');
         Route::post('/create-role', [RoleController::class, 'create_role'])->name('roles.create');

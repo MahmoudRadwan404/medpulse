@@ -21,11 +21,9 @@ class DatabaseSeeder extends Seeder
     {
         $permissions = [
             // Permission Routes
-            ['name' => 'permissions.create', 'description' => 'Create new permission'],
             ['name' => 'permissions.list', 'description' => 'View all permissions'],
             ['name' => 'permissions.show', 'description' => 'View permission details'],
             ['name' => 'permissions.update', 'description' => 'Update permission'],
-            ['name' => 'permissions.delete', 'description' => 'Delete permission'],
             
             // Role Routes
             ['name' => 'roles.create', 'description' => 'Create new role'],
